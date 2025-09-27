@@ -1,7 +1,5 @@
 import 'package:tafeel_task/modules/users/model/user_model.dart';
 
-
-
 class PaginationResponse {
   final int page;
   final int perPage;
@@ -9,7 +7,6 @@ class PaginationResponse {
   final int totalPages;
   final List<UserModel> data;
   
-
   PaginationResponse({
     required this.page,
     required this.perPage,

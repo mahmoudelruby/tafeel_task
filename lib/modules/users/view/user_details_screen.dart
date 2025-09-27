@@ -6,8 +6,8 @@ import 'package:tafeel_task/modules/users/logic/search_state.dart';
 import 'package:tafeel_task/modules/users/view/widget/user_details.dart';
 
 class UserDetailsScreen extends StatelessWidget {
-  final int userId;
-  const UserDetailsScreen({super.key, required this.userId});
+   int userId;
+   UserDetailsScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class UserDetailsScreen extends StatelessWidget {
                   ),
                 );
               } else if (state is UserDetailsSuccess) {
-                final user = context.read<SearchCubit>().selectedUser!;
+                var user = context.read<SearchCubit>().selectedUser!;
                 return UserDetails(
                   fullName: user.fullName,
                   email: user.email,

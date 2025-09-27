@@ -4,22 +4,27 @@ import 'package:http/http.dart' as http;
 class ApiConstants {
   static const String baseUrl = 'https://reqres.in/api';
   static const String usersEndpoint = '/users';
+ 
+
 
   
-  // HTTP Headers
-  static const Map<String, String> defaultHeaders = {
+  
+  static const Map<String, String> apiHeader = {
     'Content-Type': 'application/json',
    'x-api-key': 'reqres-free-v1'
 
   };
   
-  // HTTP Status Codes
+
   static const int successCode = 200;
   static const int notFoundCode = 404;
   static const int serverErrorCode = 500;
+  static const int unauthorizedCode = 401;
 }
 
+
 class ApiHelper {
+  
   static String buildUrl(String endpoint, {Map<String, dynamic>? queryParams}) {
     String url = '${ApiConstants.baseUrl}$endpoint';
     
@@ -39,7 +44,7 @@ class ApiHelper {
       
       http.Response response = await http.get(
         Uri.parse(url),
-        headers: ApiConstants.defaultHeaders,
+        headers: ApiConstants.apiHeader,
       );
       
       return ApiResponse(

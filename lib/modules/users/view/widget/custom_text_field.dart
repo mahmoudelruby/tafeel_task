@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tafeel_task/core/theme/app_colors.dart';
 
 class CustomTextFiled extends StatelessWidget {
-  final String? hintText;
-  final TextStyle? hintStyle;
-  final TextEditingController? controller;
-  final Function(String)? onChanged;
-  final int? maxLines;
-  final String? helperText;
-  final Color? fillColor;
+   String? hintText;
+   TextStyle? hintStyle;
+   TextEditingController? controller;
+   Function(String)? onChanged;
+   int? maxLines;
+   String? helperText;
+   Color? fillColor;
   
 
-  const CustomTextFiled({
+   CustomTextFiled({
     super.key,
     this.hintText,
     this.hintStyle,

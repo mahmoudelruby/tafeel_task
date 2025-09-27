@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 class UserDetails extends StatelessWidget {
-  final String fullName;
-  final String email;
-  final String avatar;
+   String fullName;
+   String email;
+   String avatar;
 
-  const UserDetails({
+   UserDetails({
     super.key,
     required this.fullName,
     required this.email,

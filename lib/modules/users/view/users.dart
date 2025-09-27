@@ -9,8 +9,8 @@ import 'package:tafeel_task/modules/users/view/widget/user_tile.dart';
 class AllUsers extends StatelessWidget {
   AllUsers({super.key});
 
-  final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+   final TextEditingController _searchController = TextEditingController();
+   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class AllUsers extends StatelessWidget {
                       );
                     } else if (state is SearchSuccess ||state is SearchLoadingMore){ 
 
-                      final cubit = BlocProvider.of<SearchCubit>(context);
+                      var cubit = BlocProvider.of<SearchCubit>(context);
 
                       if (cubit.filteredUsers.isEmpty && state is SearchSuccess) {
                         return Center(

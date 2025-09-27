@@ -30,9 +30,9 @@ class SearchCubit extends Cubit<SearchState> {
       if (response.isSuccess && response.data != null) {
         paginationResponse = PaginationResponse.fromJson(response.data);
 
-        if (page == 1) { 
-          allUsers = paginationResponse!.data; 
-        } else { 
+        if (page == 1) {
+          allUsers = paginationResponse!.data;
+        } else {
           allUsers.addAll(paginationResponse!.data);
         }
 
@@ -57,7 +57,6 @@ class SearchCubit extends Cubit<SearchState> {
     }
   }
 
-
   void searchUsers(String query) {
     if (query.isEmpty) {
       filteredUsers = List.from(allUsers);
@@ -70,33 +69,42 @@ class SearchCubit extends Cubit<SearchState> {
     emit(SearchSuccess());
   }
 
+  UserModel? selectedUser;
+    Map<int, UserModel> _userDetailsCache = {};
   
-
-    UserModel? selectedUser;
-
-      Future<void> getUserDetails(int userId) async {
-    try {
-      emit(UserDetailsLoading());
-
-      ApiResponse response = await ApiHelper.makeGetRequest(
-        '${ApiConstants.usersEndpoint}/$userId',
-      );
-
-      if (response.isSuccess && response.data != null) {
-        selectedUser = UserModel.fromJson(response.data['data']);
-        emit(UserDetailsSuccess());
-      } else {
-        errorMessage = response.errorMessage ?? ResponseMessages.serverError;
+  
+    Future<void> getUserDetails(int userId) async {
+      try {
+  
+        if (_userDetailsCache.containsKey(userId)) {
+          selectedUser = _userDetailsCache[userId];
+          emit(UserDetailsSuccess());
+          return;
+        }
+        emit(UserDetailsLoading());
+  
+        ApiResponse response = await ApiHelper.makeGetRequest(
+          '${ApiConstants.usersEndpoint}/$userId',
+        );
+  
+        if (response.isSuccess && response.data != null) {
+  
+          selectedUser = UserModel.fromJson(response.data['data']);
+           _userDetailsCache[userId] = selectedUser!;
+  
+          print(response.data['data']);
+          emit(UserDetailsSuccess());
+        } else {
+          errorMessage = response.errorMessage ?? ResponseMessages.serverError;
+          emit(UserDetailsError());
+        }
+      } catch (e) {
+        errorMessage = '${ResponseMessages.networkError}: ${e.toString()}';
         emit(UserDetailsError());
       }
-    } catch (e) {
-      errorMessage = '${ResponseMessages.networkError}: ${e.toString()}';
-      emit(UserDetailsError());
     }
-  }
+  
 
-
-  // Helper methods for UI
   bool get hasNextPage => paginationResponse?.hasNextPage ?? false;
   bool get hasPreviousPage => paginationResponse?.hasPreviousPage ?? false;
   int get currentPage => paginationResponse?.page ?? 1;
