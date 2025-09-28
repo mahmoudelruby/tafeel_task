@@ -70,14 +70,14 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   UserModel? selectedUser;
-    Map<int, UserModel> _userDetailsCache = {};
+   final Map<int, UserModel> userDetailsCache = {};
   
   
     Future<void> getUserDetails(int userId) async {
       try {
   
-        if (_userDetailsCache.containsKey(userId)) {
-          selectedUser = _userDetailsCache[userId];
+        if (userDetailsCache.containsKey(userId)) {
+          selectedUser = userDetailsCache[userId];
           emit(UserDetailsSuccess());
           return;
         }
@@ -90,7 +90,7 @@ class SearchCubit extends Cubit<SearchState> {
         if (response.isSuccess && response.data != null) {
   
           selectedUser = UserModel.fromJson(response.data['data']);
-           _userDetailsCache[userId] = selectedUser!;
+           userDetailsCache[userId] = selectedUser!;
   
           print(response.data['data']);
           emit(UserDetailsSuccess());
