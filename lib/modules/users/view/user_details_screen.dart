@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tafeel_task/modules/users/logic/search_cubit.dart';
 import 'package:tafeel_task/modules/users/logic/search_state.dart';
 import 'package:tafeel_task/modules/users/model/user_model.dart';
+import 'package:tafeel_task/modules/users/view/widget/shimmer/shimmer_user_details.dart';
 import 'package:tafeel_task/modules/users/view/widget/user_details.dart';
 
 class UserDetailsScreen extends StatelessWidget {
@@ -37,10 +38,9 @@ class UserDetailsScreen extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is UserDetailsLoading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+           if (state is UserDetailsLoading) {
+            return const ShimmerUserDetails();
+          
           } else if (state is UserDetailsError) {
             return Center(
               child: Column(

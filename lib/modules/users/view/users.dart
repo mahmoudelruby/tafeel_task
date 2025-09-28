@@ -5,6 +5,7 @@ import 'package:tafeel_task/modules/users/logic/search_state.dart';
 import 'package:tafeel_task/modules/users/model/user_model.dart';
 import 'package:tafeel_task/modules/users/view/user_details_screen.dart';
 import 'package:tafeel_task/modules/users/view/widget/custom_text_field.dart';
+import 'package:tafeel_task/modules/users/view/widget/shimmer/shimmer_user_tile.dart';
 import 'package:tafeel_task/modules/users/view/widget/user_tile.dart';
 
 class AllUsers extends StatelessWidget {
@@ -47,65 +48,76 @@ class AllUsers extends StatelessWidget {
                 );
               }
             }, builder: (context, state) {
-              if (state is SearchLoading) {
-                return Center(child: CircularProgressIndicator());
+               if (state is SearchLoading) {
+                return ListView.separated(
+                  itemCount: 6,
+                  separatorBuilder: (context, index) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  itemBuilder: (context, index) => const ShimmerUserTile(),
+                );
               } else if (state is SearchError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        context.read<SearchCubit>().errorMessage,
-                        style: TextStyle(color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                      ElevatedButton(
-                        onPressed: () {
-                          context.read<SearchCubit>().fetchUsers();
-                        },
-                        child: Text('Retry'),
-                      ),
-                    ],
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<SearchCubit>().fetchUsers();
+                  },
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          context.read<SearchCubit>().errorMessage,
+                          style: TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.read<SearchCubit>().fetchUsers();
+                          },
+                          child: Text('Retry'),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else if (state is SearchSuccess &&
                   context.watch<SearchCubit>().filteredUsers.isEmpty) {
-                return Center(
-                  child: Text('No users found.'),
-                );
+                return Center( child: Text('No users found.'));
               }
               return 
-                  NotificationListener<ScrollNotification>(
-                onNotification: (scrollNotification) {
-                  if (scrollNotification is ScrollEndNotification) {
-                    _onScroll(context);
-                  }
-                  return false;
-                },
-                child: ListView.separated(
-                  controller: _scrollController,
-                  itemCount: context.watch<SearchCubit>().filteredUsers.length,
-                  separatorBuilder: (context, index) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  itemBuilder: (context, index) {
-                    UserModel user = context.watch<SearchCubit>().filteredUsers[index];
-                    return UserTile(
-                      id: user.id.toString(),
-                      firstName: user.firstName,
-                      fullName: user.fullName,
-                      email: user.email,
-                      avatar: user.avatar,
-                          onTap: () {
-                             Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => UserDetailsScreen(userId: user.id
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<SearchCubit>().fetchUsers();
+                    },
+                    child: NotificationListener<ScrollNotification>(
+                     onNotification: (scrollNotification) {
+                    if (scrollNotification is ScrollEndNotification) {
+                      _onScroll(context);
+                    }
+                    return false;},
+                    child: ListView.separated(
+                    controller: _scrollController,
+                    itemCount: context.watch<SearchCubit>().filteredUsers.length,
+                    separatorBuilder: (context, index) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                    itemBuilder: (context, index) {
+                      UserModel user = context.watch<SearchCubit>().filteredUsers[index];
+                      return UserTile(
+                        id: user.id.toString(),
+                        firstName: user.firstName,
+                        fullName: user.fullName,
+                        email: user.email,
+                        avatar: user.avatar,
+                            onTap: () {
+                               Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => UserDetailsScreen(userId: user.id
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                    );
-                  },
-                ),
-              );
+                            );
+                          },
+                      );
+                    },
+                                    ),
+                                  ),
+                  );
             })),
           ],
         ),
