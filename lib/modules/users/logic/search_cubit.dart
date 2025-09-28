@@ -28,8 +28,9 @@ class SearchCubit extends Cubit<SearchState> {
       );
 
       if (response.isSuccess && response.data != null) {
-        paginationResponse = PaginationResponse.fromJson(response.data);
 
+        paginationResponse = PaginationResponse.fromJson(response.data);
+    
         if (page == 1) {
           allUsers = paginationResponse!.data;
         } else {
@@ -92,7 +93,7 @@ class SearchCubit extends Cubit<SearchState> {
           selectedUser = UserModel.fromJson(response.data['data']);
            userDetailsCache[userId] = selectedUser!;
   
-          print(response.data['data']);
+    
           emit(UserDetailsSuccess());
         } else {
           errorMessage = response.errorMessage ?? ResponseMessages.serverError;
