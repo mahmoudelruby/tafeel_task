@@ -16,7 +16,8 @@ class TafellTask extends StatelessWidget {
     return BlocProvider(
       create: (context) => SearchCubit(),
       child: MaterialApp(
-        title: 'Tafell Task',
+        debugShowCheckedModeBanner: false,
+        title: 'Tafeel Task',
         theme: ThemeData(
           primaryColor: AppColors.primary,
           scaffoldBackgroundColor: AppColors.primary,

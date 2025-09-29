@@ -7,7 +7,7 @@ import 'package:tafeel_task/modules/users/view/user_details_screen.dart';
 import 'package:tafeel_task/modules/users/view/widget/custom_text_field.dart';
 import 'package:tafeel_task/modules/users/view/widget/shimmer/shimmer_user_tile.dart';
 import 'package:tafeel_task/modules/users/view/widget/user_tile.dart';
-
+  
 class AllUsers extends StatelessWidget {
   AllUsers({super.key});
 
@@ -50,6 +50,7 @@ class AllUsers extends StatelessWidget {
             }, builder: (context, state) {
                if (state is SearchLoading) {
                 return ListView.separated(
+
                   itemCount: 6,
                   separatorBuilder: (context, index) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   itemBuilder: (context, index) => const ShimmerUserTile(),
@@ -79,7 +80,7 @@ class AllUsers extends StatelessWidget {
                     ),
                   ),
                 );
-              } else if (state is SearchSuccess &&
+        } else if (state is SearchSuccess &&
                   context.watch<SearchCubit>().filteredUsers.isEmpty) {
                 return Center( child: Text('No users found.'));
               }
@@ -92,14 +93,19 @@ class AllUsers extends StatelessWidget {
                      onNotification: (scrollNotification) {
                     if (scrollNotification is ScrollEndNotification) {
                       _onScroll(context);
-                    }
-                    return false;},
+                    }return false;},
                     child: ListView.separated(
                     controller: _scrollController,
-                    itemCount: context.watch<SearchCubit>().filteredUsers.length,
+                    itemCount: context.watch<SearchCubit>().filteredUsers.length + (context.watch<SearchCubit>().isLoadingMore ? 1 : 0),
                     separatorBuilder: (context, index) => SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                     itemBuilder: (context, index) {
-                      UserModel user = context.watch<SearchCubit>().filteredUsers[index];
+                      final cubit = context.watch<SearchCubit>();
+                      if (index >= cubit.filteredUsers.length) {
+                        return const Center(child: CircularProgressIndicator(
+                          color: Colors.grey,
+                        ));
+                      }
+                      UserModel user = cubit.filteredUsers[index];
                       return UserTile(
                         id: user.id.toString(),
                         firstName: user.firstName,

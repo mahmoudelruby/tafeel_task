@@ -61,7 +61,7 @@ class UserDetailsScreen extends StatelessWidget {
                 ],
               ),
             );
-          } else if (state is UserDetailsSuccess) {
+          } else{
             UserModel user = context.read<SearchCubit>().selectedUser!;
             return UserDetails(
               fullName: user.fullName,
@@ -70,9 +70,7 @@ class UserDetailsScreen extends StatelessWidget {
             );
           }
 
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+        
         },
       ),
     );
